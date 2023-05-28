@@ -1,8 +1,5 @@
 [theme]
 base="dark"
 
-[server]
-port = 80
-
 [browser]
 gatherUsageStats = false
