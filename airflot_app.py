@@ -22,8 +22,8 @@ def load_data():
     st.write(1)
     try:
         data_class = pd.read_parquet('data/CLEAR_CLASS_TO_USE.parquet')
-    except:
-        st.write('oops)
+    except RuntimeError:
+        st.write('oops')
     st.write(2)
     data_rasp = pd.read_csv('data/RASP2020.csv', sep=';').drop(
         columns=['NUM_LEGS', 'CAPTURE_DATE1', 'DEP_TIME1', 'ARR_TIME1', 'EQUIP1'])
