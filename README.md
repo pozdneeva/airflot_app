@@ -1,7 +1,7 @@
 # airflot_app
 Application to predict Airflot dynamics.
 
-# TO DO
+# HOW TO
 
 Репозиторий содержит весь необходимый код для запуска проекта. Запуск возможен напрямую из терминала (рекомендуется использовать PyCharm). 
 
