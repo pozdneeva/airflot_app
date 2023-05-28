@@ -8,6 +8,8 @@ from dateutil.relativedelta import relativedelta
 from model_utils import get_model_data, get_model_data_future
 import altair as alt
 import zipfile
+from config import *
+
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -17,22 +19,47 @@ st.title('Аэрофлот. Динамика бронирований')
 
 @st.cache_data(persist=True)
 def load_data():
-    with zipfile.ZipFile('data/CLEAR_CLASS_TO_USE_short.zip', 'r') as zip_ref:
-        zip_ref.extractall('data/')
-    data_class = pd.read_parquet('data/CLEAR_CLASS_TO_USE_short.parquet')
-    data_rasp = pd.read_csv('data/RASP2020.csv', sep=';').drop(
-        columns=['NUM_LEGS', 'CAPTURE_DATE1', 'DEP_TIME1', 'ARR_TIME1', 'EQUIP1'])
+    if data_to_use == 'long':
+        data_class = pd.read_parquet('data/CLEAR_CLASS_TO_USE.parquet')
+        data_rasp = pd.read_csv('data/RASP2020.csv', sep=';').drop(
+            columns=['NUM_LEGS', 'CAPTURE_DATE1', 'DEP_TIME1', 'ARR_TIME1', 'EQUIP1'])
+    else:
+        with zipfile.ZipFile('data/CLEAR_CLASS_TO_USE_short.zip', 'r') as zip_ref:
+            zip_ref.extractall('data/')
+        data_class = pd.read_parquet('data/CLEAR_CLASS_TO_USE_short.parquet')
+        data_rasp = pd.read_csv('data/RASP2020.csv', sep=';').drop(
+            columns=['NUM_LEGS', 'CAPTURE_DATE1', 'DEP_TIME1', 'ARR_TIME1', 'EQUIP1'])
     return data_class, data_rasp
 
 
 df, data_rasp = load_data()
 
 app_mode = st.sidebar.selectbox('Раздел ',
-                                ['Руководство', 'Динамика бронирований', 'Сезонность', 'Профили спроса', 'Прогноз', 'О команде'])
+                                ['Руководство',
+                                 'Динамика бронирований',
+                                 # 'Сезонность',
+                                 # 'Профили спроса',
+                                 'Прогноз'
+                                 ])
 
 # выбираем команду
 if app_mode == "Руководство":
-    st.markdown('Как пользоваться')
+    st.subheader('О приложении')
+    st.markdown('Данное приложение призвано визуализировать динамику бронирований на рейсы с использованием технологий'
+                'искусственного интеллекта. В данный момент реализован просмотр динамики исторических бронирований '
+                'по пролетевшим рейсам, а также прогнозов бронирований.')
+    st.subheader('Динамика бронирований')
+    st.markdown('Чтобы посмотреть динамику бронирований по пролетевшим рейсам, пройдите в соответсвуюзий Раздел'
+                'в блоке слева. Появится возможность выбора направления, рейса, даты вылета, класса бронирования и '
+                'периода бронирования. В случае отсутствия рейса с указанными параметрами будет выдано предупреждение. '
+                'В случае успеха будет выведена гистограмма с количеством бронирований на выбранный рейс в указанные '
+                'промежутки. Пользователю доступна возможность корректировки всех параметров.')
+    st.subheader('Прогноз бронирований')
+    st.markdown('Данный раздел позволяет сделать прогноз на любой период вплоть до конца 2020 года. Эта граница обусловлена '
+                'наличием данных о расписании полетов предложенных рейсов.')
+    st.markdown('Механика выбора параметров аналогична разделу Динамики бронирования. Если пользователь выбирает период, '
+                'по которому при разработке была известна история бронирований, прогноз будет сравниваться с истинным '
+                'значением с выводом метрик качества. В случае прогноза на 2020й год будет выведен только график прогноза.')
 
     st.markdown(
         """
@@ -52,6 +79,7 @@ if app_mode == "Руководство":
 
 
 elif app_mode == 'Динамика бронирований':
+    st.subheader('Динамика бронирований')
 
     direction_mode = st.sidebar.selectbox('Направление',
                                           ['Москва - Сочи', 'Сочи - Москва', 'Москва - Астрахань', 'Астрахань - Москва'])
@@ -98,6 +126,7 @@ elif app_mode == 'Динамика бронирований':
         st.success('Нет рейсов, удовлетворяющих указанным параметрам. Измените фильтры')
 
 elif app_mode == 'Прогноз':
+    st.subheader('Прогноз бронирований')
     direction_mode = st.sidebar.selectbox('Направление',
                                           ['Москва - Сочи', 'Сочи - Москва', 'Москва - Астрахань', 'Астрахань - Москва'])
     # выбираем направление рейса
