@@ -18,12 +18,15 @@ st.title('Аэрофлот. Динамика бронирований')
 @st.cache_data(persist=True)
 def load_data():
     try:
-        data_class = pd.read_parquet('../data/CLEAR_CLASS_TO_USE.parquet')
-        data_rasp = pd.read_csv('../data/RASP2020.csv', sep=';').drop(
+        data_class = pd.read_parquet('data/CLEAR_CLASS_TO_USE.parquet')
+        data_rasp = pd.read_csv('data/RASP2020.csv', sep=';').drop(
             columns=['NUM_LEGS', 'CAPTURE_DATE1', 'DEP_TIME1', 'ARR_TIME1', 'EQUIP1'])
     except:
         with zipfile.ZipFile('data/CLEAR_CLASS_TO_USE.zip', 'r') as zip_ref:
             zip_ref.extractall('data/')
+        data_class = pd.read_parquet('data/CLEAR_CLASS_TO_USE.parquet')
+        data_rasp = pd.read_csv('data/RASP2020.csv', sep=';').drop(
+            columns=['NUM_LEGS', 'CAPTURE_DATE1', 'DEP_TIME1', 'ARR_TIME1', 'EQUIP1'])
     return data_class, data_rasp
 
 
