@@ -24,15 +24,18 @@ def load_data():
     except:
         with zipfile.ZipFile('data/CLEAR_CLASS_TO_USE.zip', 'r') as zip_ref:
             zip_ref.extractall('data/')
+        st.write(1)
         data_class = pd.read_parquet('data/CLEAR_CLASS_TO_USE.parquet')
+        st.write(2)
         data_rasp = pd.read_csv('data/RASP2020.csv', sep=';').drop(
             columns=['NUM_LEGS', 'CAPTURE_DATE1', 'DEP_TIME1', 'ARR_TIME1', 'EQUIP1'])
+        st.write(3)
     return data_class, data_rasp
 
 
 df, data_rasp = load_data()
 # st.write(df.head())
-
+st.write(4)
 app_mode = st.sidebar.selectbox('Раздел ',
                                 ['Руководство', 'Динамика бронирований', 'Сезонность', 'Профили спроса', 'Прогноз', 'О команде'])
 
