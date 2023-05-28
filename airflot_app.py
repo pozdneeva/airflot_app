@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from data_utils import load_data, select_flt
+from data_utils import select_flt
 from filter_utils import get_flt_num, get_class
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -10,10 +10,6 @@ import altair as alt
 
 import warnings
 warnings.filterwarnings('ignore')
-
-from streamlit_echarts import st_pyecharts, st_echarts
-from pyecharts.charts import Bar
-from pyecharts import options as opts
 
 st.title('Аэрофлот. Динамика бронирований')
 
